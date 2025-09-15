@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Şirket Adı – Resmi Tanıtım Sitesi</title>
+  <meta name="description" content="Şirketiniz için modern tanıtım sayfası. Video arkaplan, teklif formu ve WhatsApp kısayolu." />
+  <style>
+    :root{--bg:#0b0e14;--fg:#e8ecf1;--muted:#aeb7c2;--accent:#52a0ff}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;background:#000;color:var(--fg);line-height:1.6}
+    a{color:var(--accent);text-decoration:none}
+
+    .hero{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden}
+    .bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(.55) saturate(110%)}
+    .hero-inner{position:relative;z-index:2;max-width:960px;margin:auto;padding:24px;text-align:center;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);border-radius:16px}
+    h1{margin:.4rem 0 0;font-size:clamp(28px,4vw,54px)}
+    .lead{max-width:70ch;margin:10px auto 0;color:var(--muted)}
+    .cta{margin-top:18px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#fff;font-weight:600;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#2580ff,#00c2ff);border-color:transparent}
+
+    section{padding:70px 20px}
+    .section-inner{max-width:960px;margin:auto;text-align:center}
+
+    .services{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:30px}
+    .service-card{padding:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px}
+    .service-card h3{margin-top:0;color:#fff}
+    .service-card p{color:var(--muted)}
+
+    .modal{position:fixed;inset:0;display:none;place-items:center;z-index:70}
+    .modal.show{display:grid}
+    .modal::before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:0}
+    .modal-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(.55)}
+    .modal-card{position:relative;z-index:2;width:min(560px,92vw);background:rgba(10,12,18,.92);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .close{background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:10px;color:#fff;font-size:18px;line-height:1;padding:6px 10px;cursor:pointer}
+    .close:hover{background:rgba(255,255,255,.08)}
+
+    form{display:grid;gap:12px}
+    input,textarea,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff}
+    textarea{min-height:110px;resize:vertical}
+    #formMsg{color:#8fff8f;font-size:.92rem}
+
+    .whatsapp-fab{position:fixed;right:20px;bottom:20px;z-index:80;background:#25D366;color:#fff;font-size:26px;padding:14px 18px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.3);text-decoration:none}
+    .whatsapp-fab:hover{background:#1ebe5d}
+  
+    /* Bölüm stilleri */
+    section{padding:72px 22px}
+    .container{max-width:1100px;margin:auto}
+    .grid{display:grid;gap:26px}
+    .grid-2{grid-template-columns:1.1fr 1fr}
+    @media (max-width: 900px){.grid-2{grid-template-columns:1fr}}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:.9rem;color:#dce6f3;background:rgba(255,255,255,.04)}
+  
+    /* Bölüm stilleri (genişletildi) */
+    section{padding:72px 22px}
+    .container{max-width:1100px;margin:auto}
+    .grid{display:grid;gap:26px}
+    .grid-2{grid-template-columns:1.1fr 1fr}
+    @media (max-width: 900px){.grid-2{grid-template-columns:1fr}}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:.9rem;color:#dce6f3;background:rgba(255,255,255,.04)}
+
+    /* Bölüm video arkaplanı */
+    .with-video{position:relative;min-height:60svh;display:grid;place-items:center;overflow:hidden}
+    .section-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(.5)}
+    .section-surface{position:relative;z-index:2;width:100%;max-width:1100px}
+  </style>
+</head>
+<body>
+  <!-- HERO -->
+  <section class="hero" aria-label="Tanıtım">
+    <video class="bg-video" id="bgVideo" poster="assets/img/poster.jpg" preload="metadata" muted playsinline autoplay loop>
+      <source src="assets/video/video.webm" type="video/webm" />
+      <source src="assets/video/video.mp4" type="video/mp4" />
+      Tarayıcınız video öğesini desteklemiyor.
+    </video>
+
+    <div class="hero-inner">
+      <h1>Şirket Adı</h1>
+      <p class="lead">Şirketinizi tanıtan kısa ve net bir mesaj. Değer önerinizi bir-iki cümlede anlatın.</p>
+      <div class="cta">
+        <button class="btn primary" id="openTeklif">Teklif Al</button>
+        <a class="btn" href="#hakkimizda">Biz Kimiz</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BİZ KİMİZ -->
+  <section id="hakkimizda">
+    <div class="section-inner">
+      <h2>Biz Kimiz?</h2>
+      <p>Yıllardır sektörde faaliyet gösteren şirketimiz, güvenilir ve sağlam iskele çözümleri sunmaktadır. Tecrübeli ekibimiz ve kaliteli malzemelerimiz ile inşaat projelerinizde en güvenli altyapıyı sağlıyoruz.</p>
+    </div>
+  </section>
+
+  <!-- HİZMETLER -->
+  <section id="hizmetler">
+    <div class="section-inner">
+      <h2>Hizmetlerimiz</h2>
+      <div class="services">
+        <div class="service-card">
+          <h3>İskele Kurulumu</h3>
+          <p>İnşaat ve bakım projeleriniz için sağlam, güvenli ve profesyonel iskele kurulum hizmeti.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAKKIMIZDA (Biz Kimiz) – video arkaplanlı bölüm -->
+  <section id="hakkimizda" class="with-video" aria-label="Biz Kimiz">
+    <video class="section-video autoplay-section-video" poster="assets/img/poster.jpg" preload="metadata" muted playsinline loop>
+      <source src="assets/video/video.webm" type="video/webm" />
+      <source src="assets/video/video.mp4" type="video/mp4" />
+    </video>
+    <div class="section-surface container grid grid-2">
+      <div class="card">
+        <span class="pill">Biz Kimiz</span>
+        <h2 style="margin:.6rem 0 0">Güvenli, hızlı ve şeffaf iskele çözümleri</h2>
+        <p class="muted">2019’dan beri şantiye ve endüstriyel tesislerde <strong>iskele kurulumu, kiralama ve sökümü</strong> hizmeti veriyoruz. Önceliğimiz; iş güvenliği mevzuatına %100 uyum, zamanında teslim ve net raporlama.</p>
+        <ul>
+          <li>TS/EN 12810-12811 standartlarına uygun ekipman</li>
+          <li>Yetkin ekip, sahada günlük kontrol ve teslim tutanakları</li>
+          <li>Projeye özel statik hesap ve metraj</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Neden Biz?</h3>
+        <ul>
+          <li>İş güvenliği odaklı kurulum (çift korkuluk, topukluk, emniyet ağları)</li>
+          <li>Hızlı mobil ekipler, 7/24 saha desteği</li>
+          <li>Şeffaf fiyatlandırma ve haftalık ilerleme raporu</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJELERİMİZ -->
+  <section id="projeler" aria-label="Projelerimiz">
+    <div class="container">
+      <span class="pill">Projelerimiz</span>
+      <h2 style="margin:.6rem 0 16px">Seçili İşler</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px">
+        <div class="card">
+          <h4 style="margin:.2rem 0">Endüstriyel Tesis Bakımı</h4>
+          <p class="muted">5000 m² cephe iskelesi, 6 haftada kurulum-söküm.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Konut Projesi</h4>
+          <p class="muted">Faşad iskele + güvenlik ağları, etaplı teslim.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Köprü Bakım İskelesi</h4>
+          <p class="muted">Modül iskele + ankraj planı, gece çalışma.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HANGİ BÖLGELERDE HİZMET VERİYORUZ -->
+  <section id="bolgeler" aria-label="Hangi bölgelerde hizmet veriyoruz?">
+    <div class="container">
+      <span class="pill">Hizmet Bölgeleri</span>
+      <h2 style="margin:.6rem 0 16px">Hangi bölgelerde hizmet veriyoruz?</h2>
+      <p class="muted">Ana operasyon bölgelerimiz:</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <div class="card"><strong>İstanbul</strong><br><span class="muted">Avrupa & Anadolu</span></div>
+        <div class="card"><strong>Kocaeli</strong><br><span class="muted">İzmit & Gebze</span></div>
+        <div class="card"><strong>Sakarya</strong></div>
+        <div class="card"><strong>Bursa</strong></div>
+        <div class="card"><strong>Tekirdağ</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAHA ÖNCEKİ PROJELERİMİZ (Referanslar/Geçmiş İşler) -->
+  <section id="referanslar" aria-label="Daha önceki projelerimiz">
+    <div class="container">
+      <span class="pill">Geçmiş İşler</span>
+      <h2 style="margin:.6rem 0 16px">Daha önceki projelerimiz</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px">
+        <div class="card">
+          <h4 style="margin:.2rem 0">Fabrika Cephe İyileştirme</h4>
+          <p class="muted">4000 m², 4 kat, 5 hafta.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">AVM Çatı Bakımı</h4>
+          <p class="muted">Yüksek düşme koruması ile modül iskele.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Tarihî Yapı Restorasyonu</h4>
+          <p class="muted">Koruma kurulu şartlarına uygun özel çözüm.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HİZMETLER (Sadece İskele) -->
+  <section id="hizmetler" aria-label="Hizmetler">
+    <div class="container">
+      <span class="pill">Hizmetler</span>
+      <h2 style="margin:.6rem 0 16px">İskele</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px">
+        <div class="card">
+          <h4 style="margin:.2rem 0">Kurulum & Söküm</h4>
+          <p class="muted">Modüler/faşad iskele, modül iskelesi, mobil iskele kurulum ve kontrollü söküm.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Kiralama</h4>
+          <p class="muted">Kısa/uzun dönem kiralama, metraj bazlı teklif ve sahada stok yönetimi.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Proje & Statik</h4>
+          <p class="muted">Uygulama projesi, statik hesap, ankraj planı ve risk değerlendirmesi.</p>
+        </div>
+        <div class="card">
+          <h4 style="margin:.2rem 0">Denetim & Raporlama</h4>
+          <p class="muted">Günlük kontrol formları, teslim tutanakları ve haftalık ilerleme raporları.</p>
+        </div>
+      </div>
+      <div class="cta" style="margin-top:16px"><button class="btn primary" id="openTeklif3">İskele için Teklif Al</button></div>
+    </div>
+  </section>
+
+  <!-- TEKLİF FORMU – MODAL -->
+  <div class="modal" id="teklifModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="teklifTitle">
+    <video class="modal-video" id="modalVideo" poster="assets/img/poster.jpg" preload="metadata" muted playsinline loop>
+      <source src="assets/video/video.webm" type="video/webm" />
+      <source src="assets/video/video.mp4" type="video/mp4" />
+    </video>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="teklifTitle" style="margin:0">Teklif Al</h2>
+        <button class="close" id="closeTeklif" aria-label="Kapat">×</button>
+      </div>
+      <form id="teklifForm" action="https://formspree.io/f/xkgvargz" method="POST">
+        <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+          <input type="text" name="name" placeholder="Adınız Soyadınız" required />
+          <input type="email" name="email" placeholder="E‑posta" required />
+        </div>
+        <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+          <input type="text" name="phone" placeholder="Telefon" />
+          <select name="service" required>
+            <option value="" disabled selected>Hizmet seçin</option>
+            <option>İskele Kurulumu</option>
+          </select>
+        </div>
+        <textarea name="message" placeholder="İhtiyacınızı kısaca anlatın..." required></textarea>
+        <input type="hidden" name="_subject" value="Yeni Teklif Talebi" />
+        <input type="hidden" name="_redirect" value="https://alanadiniz.com/?sent=1" />
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+        <button class="btn primary" type="submit">Gönder</button>
+        <p id="formMsg" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- WhatsApp sabit buton -->
+  <a href="https://wa.me/905531760436?text=Merhaba,%20teklif%20almak%20istiyorum" class="whatsapp-fab" target="_blank" aria-label="WhatsApp ile iletişim">💬</a>
+
+  <script>
+    const bg = document.getElementById('bgVideo');
+    Promise.resolve().then(()=>bg?.play()).catch(()=>{});
+
+    const modal = document.getElementById('teklifModal');
+    const openBtn = document.getElementById('openTeklif');
+    const closeBtn = document.getElementById('closeTeklif');
+    const modalVideo = document.getElementById('modalVideo');
+
+    function openModal(){
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+      const p = modalVideo?.play();
+      if (p && p.catch) p.catch(()=>{});
+    }
+    function closeModal(){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      modalVideo?.pause();
+    }
+
+    openBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modal.classList.contains('show')) closeModal(); });
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('sent') === '1'){
+      const m = document.getElementById('formMsg');
+      if (m) m.textContent = 'Teşekkürler! Talebiniz başarıyla gönderildi.';
+      history.replaceState({}, '', location.pathname);
+    }
+      // Bölüm videolarını görünür oldukça oynat (performans için)
+    const vids = Array.from(document.querySelectorAll('.autoplay-section-video'));
+    const io2 = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const v = e.target; if(!(v instanceof HTMLVideoElement)) return;
+        if(e.isIntersecting){ const p=v.play(); if(p?.catch) p.catch(()=>{}); }
+        else { v.pause(); }
+      });
+    },{threshold:0.25});
+    vids.forEach(v=>io2.observe(v));
+  </script>
+</body>
+</html>
